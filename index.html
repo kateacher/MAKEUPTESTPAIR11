@@ -3,133 +3,194 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b6b43">
+<meta name="theme-color" content="#6a1fd0">
 <meta name="format-detection" content="telephone=no">
-<title>Word Quest · Simón Araújo</title>
+<title>Word Quest · Make Up Test</title>
 <link rel="icon" href="data:,">
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: #0b6b43;
-    background: -webkit-linear-gradient(top, #0b6b43, #064b2e);
-    background: linear-gradient(180deg, #0b6b43, #064b2e);
+    background: #6a1fd0;
+    background: -webkit-linear-gradient(top, #6a1fd0 0%, #c2229b 55%, #ff6a3d 100%);
+    background: linear-gradient(180deg, #6a1fd0 0%, #c2229b 55%, #ff6a3d 100%);
     background-attachment: fixed;
-    color: #1d2b24;
+    color: #2a1745;
     min-height: 100vh;
     -webkit-text-size-adjust: 100%;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
-  .wrap { max-width: 560px; margin: 0 auto; padding: 16px; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 12px 14px 30px; }
   .screen { display: none; }
   .screen.active { display: block; }
 
-  .hero { text-align: center; color: #fff; padding: 12px 0 18px; }
-  .school { font-size: 12px; letter-spacing: 1.5px; font-weight: 700; opacity: .9; }
-  h1 { margin: 6px 0 4px; font-size: 40px; letter-spacing: 2px; color: #ffd84d; text-shadow: 0 3px 0 rgba(0,0,0,.25); }
-  .sub { margin: 0; font-size: 15px; opacity: .95; }
+  /* ---------- Encabezado ---------- */
+  .banner {
+    background: #fff; border-radius: 20px; padding: 12px 12px 10px; text-align: center;
+    box-shadow: 0 6px 0 rgba(0,0,0,.18); margin-bottom: 14px; position: relative; overflow: hidden;
+  }
+  .banner:before {
+    content: ""; display: block; height: 8px; margin: -12px -12px 10px;
+    background: #ff3d8b;
+    background: -webkit-linear-gradient(left, #ff3d8b, #ff9f1c, #ffd23f, #2ecc71, #14c9cb, #6a1fd0);
+    background: linear-gradient(90deg, #ff3d8b, #ff9f1c, #ffd23f, #2ecc71, #14c9cb, #6a1fd0);
+  }
+  .b1 { font-size: 15px; font-weight: 900; letter-spacing: .5px; color: #6a1fd0; }
+  .b2 { font-size: 13px; font-weight: 800; color: #ff3d8b; margin-top: 3px; letter-spacing: .4px; }
+  .b3 { display: inline-block; margin-top: 7px; font-size: 13px; font-weight: 900; color: #fff; background: #14b8a6; padding: 5px 12px; border-radius: 20px; letter-spacing: .5px; }
 
-  .card { background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
-  label, .lbl { display: block; font-size: 13px; font-weight: 800; letter-spacing: .8px; color: #0b6b43; margin: 12px 0 6px; }
+  .hero { text-align: center; color: #fff; padding: 4px 0 14px; }
+  h1 {
+    margin: 0; font-size: 44px; letter-spacing: 2px; color: #ffe14d; line-height: 1.05;
+    text-shadow: 0 3px 0 #b3166f, 0 6px 0 rgba(0,0,0,.2);
+  }
+  .sub { margin: 8px 0 0; font-size: 15px; font-weight: 700; }
+  .emojis { font-size: 26px; margin-bottom: 4px; letter-spacing: 6px; }
+
+  /* ---------- Tarjetas ---------- */
+  .card { background: #fff; border-radius: 22px; padding: 18px; box-shadow: 0 8px 0 rgba(0,0,0,.18); }
+  label, .lbl { display: block; font-size: 13px; font-weight: 900; letter-spacing: .8px; margin: 14px 0 6px; }
+  label.p1 { color: #e11d74; }
+  label.p2 { color: #1478e0; }
+  .lbl { color: #6a1fd0; }
   input[type=text] {
-    width: 100%; font-size: 18px; /* 16px+ evita el zoom en iOS */
-    padding: 14px; border: 2px solid #cfe3d8; border-radius: 12px; background: #f7fbf9;
-    text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #1d2b24;
+    width: 100%; font-size: 18px;
+    padding: 14px; border: 3px solid #ffd0e6; border-radius: 14px; background: #fff7fb;
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 800; color: #2a1745;
     -webkit-appearance: none; appearance: none; outline: none;
   }
-  input[type=text]:focus { border-color: #0b6b43; background: #fff; }
+  #n1 { border-color: #ffb3d6; background: #fff5fa; }
+  #n2 { border-color: #b3d4ff; background: #f3f8ff; }
+  #n1:focus { border-color: #e11d74; background: #fff; }
+  #n2:focus { border-color: #1478e0; background: #fff; }
 
   .grades { display: -webkit-box; display: -webkit-flex; display: flex; margin: 0 -4px; }
   .grades button {
-    -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; margin: 0 4px; padding: 14px 0; font-size: 18px; font-weight: 800;
-    border: 2px solid #cfe3d8; background: #f7fbf9; color: #0b6b43; border-radius: 12px; cursor: pointer;
-    -webkit-appearance: none; appearance: none; touch-action: manipulation;
+    -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; margin: 0 4px; padding: 14px 0; font-size: 18px; font-weight: 900;
+    border: 3px solid transparent; color: #fff; border-radius: 14px; cursor: pointer; opacity: .75;
+    -webkit-appearance: none; appearance: none; touch-action: manipulation; box-shadow: 0 4px 0 rgba(0,0,0,.2);
   }
-  .grades button.sel { background: #0b6b43; color: #fff; border-color: #0b6b43; }
+  .grades button:nth-child(1) { background: #ff3d8b; }
+  .grades button:nth-child(2) { background: #ff9f1c; }
+  .grades button:nth-child(3) { background: #14b8a6; }
+  .grades button:nth-child(4) { background: #6a1fd0; }
+  .grades button.sel { opacity: 1; border-color: #2a1745; -webkit-transform: translateY(-3px); transform: translateY(-3px); }
 
-  .err { min-height: 22px; margin-top: 10px; color: #c0392b; font-weight: 700; font-size: 14px; }
+  .err { min-height: 22px; margin-top: 10px; color: #d6204a; font-weight: 800; font-size: 14px; }
 
   .btn {
-    display: block; width: 100%; padding: 16px; font-size: 18px; font-weight: 800; border: 0; border-radius: 14px;
+    display: block; width: 100%; padding: 16px; font-size: 18px; font-weight: 900; border: 0; border-radius: 16px;
     cursor: pointer; text-align: center; text-decoration: none; margin-top: 10px;
     -webkit-appearance: none; appearance: none; touch-action: manipulation;
   }
-  .btn.primary { background: #ffd84d; color: #3b2f00; box-shadow: 0 4px 0 #c9a21b; }
-  .btn.green { background: #0b6b43; color: #fff; box-shadow: 0 4px 0 #064b2e; }
-  .btn.wa { background: #25d366; color: #063d1c; box-shadow: 0 4px 0 #1aa04c; }
-  .btn.light { background: #e8f2ed; color: #0b6b43; }
-  .btn:active { -webkit-transform: translateY(2px); transform: translateY(2px); }
-  .btn[disabled] { opacity: .5; }
+  .btn.primary { background: #ffd23f; color: #4a2c00; box-shadow: 0 5px 0 #d19a00; }
+  .btn.green { background: #14b8a6; color: #fff; box-shadow: 0 5px 0 #0b7f72; }
+  .btn.pink { background: #ff3d8b; color: #fff; box-shadow: 0 5px 0 #b3166f; }
+  .btn.wa { background: #25d366; color: #063d1c; box-shadow: 0 5px 0 #1aa04c; }
+  .btn.light { background: #efe6ff; color: #6a1fd0; box-shadow: 0 5px 0 #c9b6f2; }
+  .btn:active { -webkit-transform: translateY(3px); transform: translateY(3px); }
 
-  .rules { color: #fff; font-size: 14px; line-height: 1.5; padding-left: 20px; margin: 18px 4px 0; }
+  .rules { color: #fff; font-size: 14px; font-weight: 600; line-height: 1.55; padding-left: 20px; margin: 18px 4px 0; }
 
-  /* Juego */
-  .top { color: #fff; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; font-weight: 800; font-size: 15px; margin-bottom: 8px; }
-  .bar { height: 10px; background: rgba(255,255,255,.25); border-radius: 8px; overflow: hidden; margin-bottom: 6px; }
-  .bar > div { height: 100%; background: #ffd84d; width: 0; }
+  /* ---------- Juego ---------- */
+  .who-top { text-align: center; color: #fff; font-size: 13px; font-weight: 800; margin-bottom: 8px; word-wrap: break-word; }
+  .who-top b:first-child { color: #ffe14d; }
+  .who-top b:last-child { color: #aee0ff; }
+  .top { color: #fff; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; font-weight: 900; font-size: 16px; margin-bottom: 8px; }
+  .bar { height: 12px; background: rgba(255,255,255,.3); border-radius: 8px; overflow: hidden; margin-bottom: 6px; }
+  .bar > div { height: 100%; width: 0; }
+  #pfill { background: #ffe14d; }
   #tfill { background: #4be08b; width: 100%; transition: width .1s linear; }
-  #tfill.low { background: #ff6b5e; }
-  .tline { color: #fff; font-size: 13px; text-align: right; margin-bottom: 10px; min-height: 18px; }
+  #tfill.low { background: #ff5a4d; }
+  .tline { color: #fff; font-size: 14px; font-weight: 800; text-align: right; margin-bottom: 10px; min-height: 18px; }
 
-  .qcard { background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
-  .level { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .6px; color: #fff; background: #0b6b43; padding: 4px 10px; border-radius: 20px; }
-  .level.s { background: #d35400; }
-  .qtext { font-size: 15px; color: #55675d; margin: 12px 0 6px; }
-  .qword { font-size: 30px; font-weight: 800; color: #0b6b43; margin: 0 0 14px; word-wrap: break-word; overflow-wrap: break-word; line-height: 1.2; }
-  .qword.es { font-size: 24px; color: #8a2b1d; }
-  .qsent { font-size: 22px; font-weight: 700; line-height: 1.4; margin: 0 0 14px; }
-  .blank { display: inline-block; min-width: 70px; border-bottom: 3px solid #d35400; color: #d35400; text-align: center; }
-  .fill { color: #0b6b43; border-bottom: 3px solid #0b6b43; }
+  .qcard { background: #fff; border-radius: 22px; padding: 18px; box-shadow: 0 8px 0 rgba(0,0,0,.18); }
+  .level { display: inline-block; font-size: 12px; font-weight: 900; letter-spacing: .6px; color: #fff; background: #6a1fd0; padding: 5px 12px; border-radius: 20px; }
+  .level.s { background: #ff7a1a; }
+  .qtext { font-size: 15px; font-weight: 700; color: #7a6a93; margin: 12px 0 6px; }
+  .qword { font-size: 32px; font-weight: 900; color: #e11d74; margin: 0 0 14px; word-wrap: break-word; overflow-wrap: break-word; line-height: 1.2; }
+  .qword.es { font-size: 25px; color: #1478e0; }
+  .qsent { font-size: 22px; font-weight: 800; line-height: 1.45; margin: 0 0 14px; }
+  .blank { display: inline-block; min-width: 70px; border-bottom: 4px solid #ff7a1a; color: #ff7a1a; text-align: center; }
+  .fill { color: #0f9d58; border-bottom: 4px solid #0f9d58; }
 
   .opt {
-    display: block; width: 100%; text-align: left; font-size: 17px; font-weight: 600; line-height: 1.3;
-    padding: 14px; margin-bottom: 10px; background: #f7fbf9; color: #1d2b24; border: 2px solid #cfe3d8; border-radius: 14px;
+    display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+    width: 100%; text-align: left; font-size: 17px; font-weight: 700; line-height: 1.3;
+    padding: 10px 14px 10px 10px; margin-bottom: 10px; color: #2a1745; border: 3px solid transparent; border-radius: 16px;
     cursor: pointer; -webkit-appearance: none; appearance: none; touch-action: manipulation;
   }
-  .opt.ok { background: #d9f7e5; border-color: #1fa85a; color: #0a5a2c; }
+  .opt .bd {
+    -webkit-box-flex: 0; -webkit-flex: 0 0 34px; flex: 0 0 34px; width: 34px; height: 34px; line-height: 34px; text-align: center;
+    border-radius: 50%; color: #fff; font-weight: 900; margin-right: 12px;
+  }
+  .opt .tx { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; min-width: 0; word-wrap: break-word; overflow-wrap: break-word; }
+  .opt.o0 { background: #ffeaf3; } .opt.o0 .bd { background: #ff3d8b; }
+  .opt.o1 { background: #fff2dc; } .opt.o1 .bd { background: #ff9f1c; }
+  .opt.o2 { background: #dff7f3; } .opt.o2 .bd { background: #14b8a6; }
+  .opt.o3 { background: #ece3ff; } .opt.o3 .bd { background: #6a1fd0; }
+  .opt:active { -webkit-transform: scale(.985); transform: scale(.985); }
+  .opt.ok { background: #d4f7e1; border-color: #1fa85a; color: #0a5a2c; }
   .opt.bad { background: #fde1de; border-color: #d9473a; color: #8c1f15; }
-  .opt.dim { opacity: .55; }
+  .opt.dim { opacity: .5; }
 
-  .fb { margin-top: 4px; padding: 12px 14px; border-radius: 12px; font-size: 15px; line-height: 1.45; display: none; }
+  .fb { margin-top: 4px; padding: 12px 14px; border-radius: 14px; font-size: 15px; font-weight: 700; line-height: 1.45; display: none; }
   .fb.show { display: block; }
-  .fb.good { background: #d9f7e5; color: #0a5a2c; }
+  .fb.good { background: #d4f7e1; color: #0a5a2c; }
   .fb.wrong { background: #fde1de; color: #8c1f15; }
 
-  /* Resultados */
+  /* ---------- Resultados ---------- */
   .res { text-align: center; }
-  .stars { font-size: 34px; color: #ffb400; letter-spacing: 4px; }
-  .big { font-size: 64px; font-weight: 900; color: #0b6b43; margin: 4px 0; line-height: 1; }
-  .big small { font-size: 28px; color: #6b7d73; }
-  .who { background: #f1f7f4; border-radius: 14px; padding: 12px; margin: 14px 0; font-weight: 800; font-size: 17px; word-wrap: break-word; }
-  .who span { display: block; color: #55675d; font-weight: 700; font-size: 14px; margin-top: 4px; }
-  .msg { font-size: 18px; font-weight: 800; margin: 6px 0; }
-  details { text-align: left; margin-top: 12px; background: #f7fbf9; border: 1px solid #cfe3d8; border-radius: 12px; padding: 10px 12px; }
-  summary { font-weight: 800; color: #0b6b43; cursor: pointer; }
-  details ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.5; }
-  .note { font-size: 13px; color: #55675d; margin-top: 10px; min-height: 18px; }
+  .stars { font-size: 36px; color: #ffb400; letter-spacing: 4px; }
+  .big { font-size: 68px; font-weight: 900; color: #e11d74; margin: 4px 0; line-height: 1; }
+  .big small { font-size: 28px; color: #7a6a93; }
+  .who { background: #f5efff; border-radius: 16px; padding: 12px; margin: 14px 0; font-weight: 900; font-size: 16px; word-wrap: break-word; }
+  .who .a { color: #e11d74; } .who .c { color: #1478e0; }
+  .who span.s { display: block; color: #7a6a93; font-weight: 700; font-size: 14px; margin-top: 4px; }
+  .msg { font-size: 18px; font-weight: 900; margin: 6px 0; }
+  details { text-align: left; margin-top: 12px; background: #fff7e6; border: 2px solid #ffd58a; border-radius: 14px; padding: 10px 12px; }
+  summary { font-weight: 900; color: #c76a00; cursor: pointer; }
+  details ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.55; }
+  .note { font-size: 13px; font-weight: 700; color: #7a6a93; margin-top: 10px; min-height: 18px; }
+
+  /* confeti */
+  .confetti { position: fixed; top: 0; left: 0; right: 0; height: 0; z-index: 50; pointer-events: none; }
+  .confetti span {
+    position: absolute; top: -40px; font-size: 26px;
+    -webkit-animation: fall 3.5s linear forwards; animation: fall 3.5s linear forwards;
+  }
+  @-webkit-keyframes fall { to { -webkit-transform: translateY(110vh) rotate(540deg); opacity: .9; } }
+  @keyframes fall { to { transform: translateY(110vh) rotate(540deg); opacity: .9; } }
 </style>
 </head>
 <body>
-<noscript><div class="wrap"><div class="card">Necesitas activar JavaScript para jugar.</div></div></noscript>
+<noscript><div class="wrap"><div class="card">Necesitan activar JavaScript para jugar.</div></div></noscript>
 <div class="wrap">
+
+  <!-- ============ ENCABEZADO ============ -->
+  <div class="banner">
+    <div class="b1">SIMÓN ARAÚJO HIGHSCHOOL · TERM 4</div>
+    <div class="b2">TEACHER KAT</div>
+    <div class="b3">MAKE UP TEST / PAIR WORK</div>
+  </div>
 
   <!-- ============ INICIO ============ -->
   <section id="s-start" class="screen active">
     <div class="hero">
-      <div class="school">I.E. SIMÓN ARAÚJO · TERM 4</div>
+      <div class="emojis">💕 🎮 ✨</div>
       <h1>WORD QUEST</h1>
-      <p class="sub">Relationships &amp; Sexuality · Vocabulary Game</p>
+      <p class="sub">Relationships Vocabulary Game</p>
     </div>
 
     <div class="card">
-      <label for="n1">PRIMER NOMBRE</label>
-      <input id="n1" type="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="30" placeholder="ESCRIBE EN MAYÚSCULAS">
+      <label class="p1" for="n1">👤 PARTICIPANTE 1</label>
+      <input id="n1" type="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="40" placeholder="NOMBRE EN MAYÚSCULAS">
 
-      <label for="n2">SEGUNDO NOMBRE</label>
-      <input id="n2" type="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="30" placeholder="ESCRIBE EN MAYÚSCULAS">
+      <label class="p2" for="n2">👤 PARTICIPANTE 2</label>
+      <input id="n2" type="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="40" placeholder="NOMBRE EN MAYÚSCULAS">
 
-      <div class="lbl">GRADO ONCE (11°)</div>
+      <div class="lbl">🎓 GRADO ONCE (11°)</div>
       <div class="grades" id="grades"></div>
 
       <div class="err" id="err" role="alert"></div>
@@ -137,15 +198,17 @@
     </div>
 
     <ul class="rules">
+      <li>Trabajen en pareja: una sola pantalla, una sola respuesta.</li>
       <li>50 preguntas: 45 de significado + 5 oraciones nivel A1.</li>
       <li>Cada respuesta correcta vale 1 punto (máximo 50).</li>
-      <li>Tienes 20 segundos por pregunta (25 en las oraciones).</li>
-      <li>Al final podrás reportar tus puntos a la profesora.</li>
+      <li>Tienen 20 segundos por pregunta (25 en las oraciones).</li>
+      <li>Al final reporten sus puntos a la profesora.</li>
     </ul>
   </section>
 
   <!-- ============ JUEGO ============ -->
   <section id="s-game" class="screen">
+    <div class="who-top"><b id="wt1"></b> &amp; <b id="wt2"></b> · 11°<span id="wtg"></span></div>
     <div class="top">
       <div id="qnum">1 / 50</div>
       <div id="streak">🔥 0</div>
@@ -160,21 +223,21 @@
       <div id="qbody"></div>
       <div id="opts"></div>
       <div class="fb" id="fb"></div>
-      <button class="btn green" id="next" type="button" style="display:none">Siguiente →</button>
+      <button class="btn pink" id="next" type="button" style="display:none">Siguiente →</button>
     </div>
   </section>
 
   <!-- ============ RESULTADOS ============ -->
   <section id="s-end" class="screen">
     <div class="hero">
-      <div class="school">I.E. SIMÓN ARAÚJO · TERM 4</div>
-      <h1>¡TERMINASTE!</h1>
+      <div class="emojis">🏆 🎉 🌟</div>
+      <h1>¡TERMINARON!</h1>
     </div>
     <div class="card res">
       <div class="stars" id="stars"></div>
       <div class="big"><span id="rscore">0</span><small> / 50</small></div>
       <div class="msg" id="rmsg"></div>
-      <div class="who"><div id="rname"></div><span id="rgrade"></span><span id="rdate"></span></div>
+      <div class="who"><div><span class="a" id="rp1"></span> &amp; <span class="c" id="rp2"></span></div><span class="s" id="rgrade"></span><span class="s" id="rdate"></span></div>
 
       <a class="btn wa" id="bwa" href="#" target="_blank" rel="noopener">📲 Enviar por WhatsApp</a>
       <a class="btn green" id="bmail" href="#">✉️ Enviar por correo</a>
@@ -182,7 +245,7 @@
       <div class="note" id="rnote"></div>
 
       <details id="missed">
-        <summary>Palabras para repasar</summary>
+        <summary>📚 Palabras para repasar</summary>
         <ul id="mlist"></ul>
       </details>
 
@@ -208,70 +271,33 @@ var CONFIG = {
 
 /* =========================================================
    BANCO DE PALABRAS  [inglés, español, grupo-opcional]
+   Sin cognados ni palabras demasiado fáciles.
    El grupo evita que dos sinónimos aparezcan como opciones juntas.
    ========================================================= */
 var BANK = [
-  /* Step 2 · Diagnostic */
-  ["sex","sexo (características biológicas)"],
-  ["sexuality","sexualidad"],
-  ["female","femenino / mujer (sexo)"],
-  ["male","masculino / hombre (sexo)"],
-  ["body","cuerpo"],
-  ["organs","órganos"],
-  ["girl","niña"],
-  ["boy","niño"],
-  ["born","nacido"],
-  ["biological","biológico"],
-  ["hormones","hormonas"],
-  ["chromosomes","cromosomas"],
-  ["anatomy","anatomía"],
+  /* Diagnostic */
   ["assigned at birth","asignado al nacer"],
-  ["puberty","pubertad"],
-  ["reproduction","reproducción"],
-  ["love","amor"],
-  ["like","gustar / agradar"],
   ["feelings","sentimientos"],
-  ["identity","identidad"],
-  ["orientation","orientación"],
-  ["attraction","atracción"],
-  ["expression","expresión"],
-  ["preference","preferencia"],
   ["choice","elección / opción"],
-  ["relationship","relación"],
-  ["self-esteem","autoestima"],
-  ["gender","género"],
-  ["respect","respeto"],
-  ["safe","seguro (sin peligro)"],
-  ["consent","consentimiento"],
-  ["privacy","privacidad"],
   ["boundaries","límites"],
-  ["stereotype","estereotipo"],
-  ["diversity","diversidad"],
-  ["communication","comunicación"],
   /* Types of relationships */
   ["couple","pareja (dos personas con relación romántica)","g3"],
-  ["wife","esposa"],
-  ["husband","esposo"],
   ["partner","pareja / compañero(a) sentimental","g3"],
   ["ex","expareja"],
   ["colleague","colega de trabajo"],
   ["flatmate","compañero(a) de apartamento"],
-  ["date","cita (romántica)"],
-  ["blind date","cita a ciegas"],
+  ["date","cita (romántica)","g8"],
+  ["blind date","cita a ciegas","g8"],
   ["acquaintance","conocido(a) (no es amigo cercano)"],
-  ["close friend","amigo(a) cercano(a)","g9"],
-  ["best friend","mejor amigo(a)","g9"],
+  ["close friend","amigo(a) cercano(a)"],
+  /* Phrasal verbs about relationships (images) */
   ["keep in touch","mantenerse en contacto"],
+  ["lose touch","perder el contacto"],
   ["fall out","pelearse / distanciarse (amistad)","g1"],
   /* Healthy / unhealthy */
   ["trust","confianza"],
   ["jealousy","celos"],
-  ["control","control"],
-  ["honest communication","comunicación honesta"],
-  ["equality","igualdad"],
-  ["pressure","presión"],
   ["support","apoyo"],
-  ["insults","insultos"],
   ["personal space","espacio personal"],
   /* Dictionary Hunt */
   ["any chance?","¿hay alguna posibilidad?"],
@@ -280,11 +306,9 @@ var BANK = [
   ["have chemistry","tener química","g4"],
   ["love at first sight","amor a primera vista","g4"],
   ["fall for someone","enamorarse de alguien","g4"],
-  ["the right person","la persona indicada"],
   ["brunette","morena (cabello castaño oscuro)"],
   ["single","soltero(a)"],
   ["get along (with)","llevarse bien (con)","g6"],
-  ["be together","estar juntos","g6"],
   ["it works for us","a nosotros nos funciona"],
   ["soulmates","almas gemelas"],
   ["stronger than ever","más fuertes que nunca"],
@@ -296,11 +320,9 @@ var BANK = [
   ["lifelong commitment","compromiso para toda la vida"],
   ["deserve","merecer"],
   ["faithful","fiel"],
-  ["congrats","felicitaciones"],
   ["rush things","apresurar las cosas"],
   ["argue","discutir","g1"],
   ["fight","pelear / pelea","g1"],
-  ["behaviour","comportamiento"],
   ["put up with","soportar / tolerar"],
   ["cheat on","engañar a la pareja (infidelidad)"],
   ["long-distance relationship","relación a distancia"],
@@ -315,19 +337,24 @@ var BANK = [
 ];
 
 /* =========================================================
-   ORACIONES A1  (el hueco ____ se completa con una palabra)
+   ORACIONES A1  (el hueco ____ se completa con la respuesta)
+   a = respuesta mostrada · k = palabra del banco (si es distinta)
    ========================================================= */
 var SENTS = [
   {s:"Ana and Leo are a ____. They love each other.", a:"couple", d:["colleague","flatmate","brunette"], t:"Ana y Leo son una pareja. Se aman."},
-  {s:"Maria is my ____. She is like my family.", a:"best friend", d:["acquaintance","colleague","ex"], t:"María es mi mejor amiga. Es como mi familia."},
-  {s:"I don't have a boyfriend or a girlfriend. I am ____.", a:"single", d:["faithful","brunette","engaged"], t:"No tengo novio ni novia. Estoy soltero(a)."},
-  {s:"Tom and Eva got married ten years ago. Today is their ____.", a:"wedding anniversary", d:["puberty","privacy","behaviour"], t:"Tom y Eva se casaron hace diez años. Hoy es su aniversario de bodas."},
+  {s:"Maria is my ____. We talk every day and share secrets.", a:"close friend", d:["acquaintance","colleague","ex"], t:"María es mi amiga cercana. Hablamos todos los días y compartimos secretos."},
+  {s:"I don't have a boyfriend or a girlfriend. I am ____.", a:"single", d:["faithful","brunette","blind date"], t:"No tengo novio ni novia. Estoy soltero(a)."},
+  {s:"Tom and Eva got married ten years ago. Today is their ____.", a:"wedding anniversary", d:["blind date","acquaintance","flatmate"], t:"Tom y Eva se casaron hace diez años. Hoy es su aniversario de bodas."},
   {s:"My sister and I ____ about the TV. We are angry.", a:"argue", d:["deserve","settle down","keep in touch"], t:"Mi hermana y yo discutimos por el televisor. Estamos enojadas."},
-  {s:"I live in an apartment with Carlos. He is my ____. We share the kitchen.", a:"flatmate", d:["husband","colleague","date"], t:"Vivo en un apartamento con Carlos. Es mi compañero de apartamento. Compartimos la cocina."},
-  {s:"I am a married man. She is my ____.", a:"wife", d:["ex","colleague","flatmate"], t:"Soy un hombre casado. Ella es mi esposa."},
+  {s:"I live in an apartment with Carlos. He is my ____. We share the kitchen.", a:"flatmate", d:["colleague","ex","date"], t:"Vivo en un apartamento con Carlos. Es mi compañero de apartamento. Compartimos la cocina."},
+  {s:"Pedro and I work in the same office. He is my ____.", a:"colleague", d:["flatmate","ex","blind date"], t:"Pedro y yo trabajamos en la misma oficina. Es mi colega de trabajo."},
   {s:"Ben loves only Sara. He is ____ to her.", a:"faithful", d:["single","brunette","blind date"], t:"Ben solo ama a Sara. Le es fiel."},
-  {s:"My boyfriend lives in Spain and I live in Peru. We have a ____.", a:"long-distance relationship", d:["blind date","best friend","lifelong commitment"], t:"Mi novio vive en España y yo vivo en Perú. Tenemos una relación a distancia."},
-  {s:"It is Friday night. I have a ____ with Luis. We go to the cinema.", a:"date", d:["colleague","flatmate","couple"], t:"Es viernes en la noche. Tengo una cita con Luis. Vamos al cine."}
+  {s:"My boyfriend lives in Spain and I live in Peru. We have a ____.", a:"long-distance relationship", d:["blind date","close friend","lifelong commitment"], t:"Mi novio vive en España y yo vivo en Perú. Tenemos una relación a distancia."},
+  {s:"It is Friday night. I have a ____ with Luis. We go to the cinema.", a:"date", d:["colleague","flatmate","couple"], t:"Es viernes en la noche. Tengo una cita con Luis. Vamos al cine."},
+  {s:"Sam and Lia don't love each other now. They ____.", a:"split up", d:["get engaged","settle down","hit it off"], t:"Sam y Lía ya no se aman. Se separan."},
+  {s:"My friend lives in Chile. We ____ on WhatsApp.", a:"keep in touch", d:["split up","cheat on","settle down"], t:"Mi amigo vive en Chile. Nos mantenemos en contacto por WhatsApp."},
+  {s:"I like my new classmates. We ____ very well.", a:"get along", k:"get along (with)", d:["split up","fall out","dump"], t:"Me gustan mis nuevos compañeros de clase. Nos llevamos muy bien."},
+  {s:"Mia and Jack had a fight. Now they say sorry and ____.", a:"make up", d:["put up with","dump","tie the knot"], t:"Mia y Jack tuvieron una pelea. Ahora se piden perdón y hacen las paces."}
 ];
 
 /* =========================================================
@@ -351,8 +378,10 @@ function sanitizeName(v) {
   return String(v).toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ ]/g, "").replace(/ {2,}/g, " ");
 }
 
+function trimSp(v) { return v.replace(/^ +| +$/g, ""); }
+
 function validName(v) {
-  return /^[A-ZÁÉÍÓÚÜÑ]{2,}( [A-ZÁÉÍÓÚÜÑ]+)*$/.test(v.replace(/^ +| +$/g, ""));
+  return /^[A-ZÁÉÍÓÚÜÑ]{2,}( [A-ZÁÉÍÓÚÜÑ]+)*$/.test(trimSp(v));
 }
 
 function pad2(n) { return (n < 10 ? "0" : "") + n; }
@@ -387,7 +416,7 @@ function makeMeaning(w) {
 
 function makeSentence(s) {
   var opts = s.d.slice(); opts.push(s.a);
-  return { type: "s", s: s.s, en: s.a, es: s.t, correct: s.a, opts: shuffle(opts) };
+  return { type: "s", s: s.s, en: s.k || s.a, es: s.t, correct: s.a, opts: shuffle(opts) };
 }
 
 function buildQuiz() {
@@ -435,7 +464,6 @@ bindName($("n2"));
       var b = document.createElement("button");
       b.type = "button";
       b.textContent = "11°" + letter;
-      b.setAttribute("data-g", letter);
       b.addEventListener("click", function () {
         STATE.grade = letter;
         var all = box.getElementsByTagName("button"), m;
@@ -449,15 +477,15 @@ bindName($("n2"));
 })();
 
 $("go").addEventListener("click", function () {
-  var a = sanitizeName($("n1").value).replace(/^ +| +$/g, "");
-  var b = sanitizeName($("n2").value).replace(/^ +| +$/g, "");
+  var a = trimSp(sanitizeName($("n1").value));
+  var b = trimSp(sanitizeName($("n2").value));
   $("n1").value = a; $("n2").value = b;
   if (!validName(a) || !validName(b)) {
-    $("err").textContent = "Escribe tus 2 nombres en MAYÚSCULAS (solo letras, mínimo 2).";
+    $("err").textContent = "Escriban el nombre del PARTICIPANTE 1 y del PARTICIPANTE 2 en MAYÚSCULAS (solo letras).";
     return;
   }
   if (!STATE.grade) {
-    $("err").textContent = "Selecciona tu grado: 11°A, 11°B, 11°C o 11°D.";
+    $("err").textContent = "Seleccionen su grado: 11°A, 11°B, 11°C o 11°D.";
     return;
   }
   $("err").textContent = "";
@@ -471,6 +499,9 @@ $("go").addEventListener("click", function () {
 function startGame() {
   STATE.qs = buildQuiz();
   STATE.i = 0; STATE.score = 0; STATE.streak = 0; STATE.missed = [];
+  $("wt1").textContent = STATE.n1;
+  $("wt2").textContent = STATE.n2;
+  $("wtg").textContent = STATE.grade;
   show("s-game");
   renderQuestion();
 }
@@ -484,7 +515,7 @@ function setHud() {
 }
 
 function renderQuestion() {
-  var q = STATE.qs[STATE.i], html = "", k;
+  var q = STATE.qs[STATE.i], k;
   STATE.locked = false;
   setHud();
 
@@ -493,11 +524,9 @@ function renderQuestion() {
   else { lv.textContent = "✏️ NIVEL 2 · ORACIÓN A1"; lv.className = "level s"; }
 
   if (q.type === "m") {
-    if (q.mode === "en2es") {
-      html = '<div class="qtext">¿Qué significa en español?</div><div class="qword"></div>';
-    } else {
-      html = '<div class="qtext">¿Cuál es la palabra en inglés?</div><div class="qword es"></div>';
-    }
+    var html = (q.mode === "en2es")
+      ? '<div class="qtext">¿Qué significa en español?</div><div class="qword"></div>'
+      : '<div class="qtext">¿Cuál es la expresión en inglés?</div><div class="qword es"></div>';
     $("qbody").innerHTML = html;
     $("qbody").lastChild.textContent = (q.mode === "en2es") ? q.en : q.es;
   } else {
@@ -511,10 +540,14 @@ function renderQuestion() {
   }
 
   var box = $("opts"); box.innerHTML = "";
+  var letters = ["A", "B", "C", "D"];
   for (k = 0; k < q.opts.length; k++) {
     (function (idx) {
       var b = document.createElement("button");
-      b.type = "button"; b.className = "opt"; b.textContent = q.opts[idx];
+      b.type = "button"; b.className = "opt o" + idx;
+      var bd = document.createElement("span"); bd.className = "bd"; bd.textContent = letters[idx];
+      var tx = document.createElement("span"); tx.className = "tx"; tx.textContent = q.opts[idx];
+      b.appendChild(bd); b.appendChild(tx);
       b.addEventListener("click", function () { answer(idx); });
       box.appendChild(b);
     })(k);
@@ -590,7 +623,7 @@ function answer(idx) {
   $("streak").textContent = "🔥 " + STATE.streak;
 
   var nx = $("next");
-  nx.textContent = (STATE.i >= STATE.qs.length - 1) ? "Ver mi resultado 🏆" : "Siguiente →";
+  nx.textContent = (STATE.i >= STATE.qs.length - 1) ? "Ver resultado 🏆" : "Siguiente →";
   nx.style.display = "block";
 }
 
@@ -606,11 +639,12 @@ $("next").addEventListener("click", function () {
 var REPORT_TEXT = "";
 
 function buildReport() {
-  var name = STATE.n1 + " " + STATE.n2;
   var lines = [
     "REPORTE · WORD QUEST",
-    "I.E. Simón Araújo · Term 4 · Teacher Katia Contreras",
-    "Estudiante: " + name,
+    "Simón Araújo Highschool · Term 4 · Teacher Kat",
+    "Make up test / Pair work",
+    "Participante 1: " + STATE.n1,
+    "Participante 2: " + STATE.n2,
     "Grado: 11°" + STATE.grade,
     "Puntos: " + STATE.score + " / " + STATE.qs.length,
     "Fecha: " + nowText()
@@ -623,6 +657,22 @@ function buildReport() {
   return lines.join("\n");
 }
 
+function confetti() {
+  try {
+    var box = document.createElement("div"); box.className = "confetti";
+    var em = ["🎉", "⭐", "💖", "✨", "🎈", "💕", "🌟"], k, s;
+    for (k = 0; k < 34; k++) {
+      s = document.createElement("span");
+      s.textContent = em[k % em.length];
+      s.style.left = Math.round(Math.random() * 94) + "%";
+      s.style.webkitAnimationDelay = s.style.animationDelay = (Math.random() * 1.6).toFixed(2) + "s";
+      box.appendChild(s);
+    }
+    document.body.appendChild(box);
+    setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 6000);
+  } catch (e) {}
+}
+
 function finish() {
   show("s-end");
   var total = STATE.qs.length, s = STATE.score;
@@ -633,21 +683,22 @@ function finish() {
   for (k = 0; k < 5; k++) stars += (k < st ? "★" : "☆");
   $("stars").textContent = stars;
 
-  var msg = s >= 45 ? "🏆 ¡Excelente! Dominas el vocabulario."
-          : s >= 35 ? "🎉 ¡Muy bien! Casi lo tienes."
-          : s >= 25 ? "👍 Bien, sigue practicando."
-          :           "📚 Necesitas repasar. ¡Tú puedes!";
+  var msg = s >= 45 ? "🏆 ¡Excelente! Dominan el vocabulario."
+          : s >= 35 ? "🎉 ¡Muy bien! Casi lo logran."
+          : s >= 25 ? "👍 Bien, sigan practicando."
+          :           "📚 Necesitan repasar. ¡Ustedes pueden!";
   $("rmsg").textContent = msg;
 
-  $("rname").textContent = STATE.n1 + " " + STATE.n2;
+  $("rp1").textContent = STATE.n1;
+  $("rp2").textContent = STATE.n2;
   $("rgrade").textContent = "Grado 11°" + STATE.grade;
   $("rdate").textContent = nowText();
 
   REPORT_TEXT = buildReport();
 
-  var wa = "https://wa.me/" + (CONFIG.TEACHER_WHATSAPP ? CONFIG.TEACHER_WHATSAPP.replace(/[^0-9]/g, "") : "") + "?text=" + encodeURIComponent(REPORT_TEXT);
-  $("bwa").href = wa;
-  $("bmail").href = "mailto:" + CONFIG.TEACHER_EMAIL + "?subject=" + encodeURIComponent("Word Quest - 11°" + STATE.grade + " - " + STATE.n1 + " " + STATE.n2) + "&body=" + encodeURIComponent(REPORT_TEXT);
+  var num = CONFIG.TEACHER_WHATSAPP ? CONFIG.TEACHER_WHATSAPP.replace(/[^0-9]/g, "") : "";
+  $("bwa").href = "https://wa.me/" + num + "?text=" + encodeURIComponent(REPORT_TEXT);
+  $("bmail").href = "mailto:" + CONFIG.TEACHER_EMAIL + "?subject=" + encodeURIComponent("Word Quest - 11°" + STATE.grade + " - " + STATE.n1 + " y " + STATE.n2) + "&body=" + encodeURIComponent(REPORT_TEXT);
 
   var list = $("mlist"); list.innerHTML = "";
   if (STATE.missed.length === 0) {
@@ -662,13 +713,14 @@ function finish() {
   }
 
   $("rnote").textContent = "";
+  if (s >= 30) confetti();
   sendWebhook();
 }
 
 function sendWebhook() {
   if (!CONFIG.WEBHOOK_URL || typeof fetch !== "function") return;
   var payload = {
-    nombre1: STATE.n1, nombre2: STATE.n2, grado: "11" + STATE.grade,
+    participante1: STATE.n1, participante2: STATE.n2, grado: "11" + STATE.grade,
     puntos: STATE.score, total: STATE.qs.length, fecha: nowText(),
     repasar: STATE.missed.map(function (m) { return m.en; }).join(", ")
   };
@@ -677,14 +729,14 @@ function sendWebhook() {
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload)
   }).then(function () {
-    $("rnote").textContent = "✅ Tus puntos fueron enviados al registro de la profesora.";
+    $("rnote").textContent = "✅ Sus puntos fueron enviados al registro de la profesora.";
   }).catch(function () {
-    $("rnote").textContent = "⚠️ No se pudo enviar automáticamente. Usa WhatsApp o copia el reporte.";
+    $("rnote").textContent = "⚠️ No se pudo enviar automáticamente. Usen WhatsApp o copien el reporte.";
   });
 }
 
 $("bcopy").addEventListener("click", function () {
-  var done = function () { $("rnote").textContent = "📋 Reporte copiado. Pégalo en el chat de la profesora."; };
+  var done = function () { $("rnote").textContent = "📋 Reporte copiado. Péguenlo en el chat de la profesora."; };
   var fallback = function () {
     var ta = document.createElement("textarea");
     ta.value = REPORT_TEXT; ta.setAttribute("readonly", "");
@@ -695,7 +747,7 @@ $("bcopy").addEventListener("click", function () {
     var ok = false;
     try { ok = document.execCommand("copy"); } catch (e) {}
     document.body.removeChild(ta);
-    if (ok) done(); else $("rnote").textContent = "No se pudo copiar. Toma una captura de pantalla.";
+    if (ok) done(); else $("rnote").textContent = "No se pudo copiar. Tomen una captura de pantalla.";
   };
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(REPORT_TEXT).then(done, fallback);
