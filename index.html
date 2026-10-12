@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b6b43">
+<meta name="format-detection" content="telephone=no">
+<title>Word Quest · Simón Araújo</title>
+<link rel="icon" href="data:,">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #0b6b43;
+    background: -webkit-linear-gradient(top, #0b6b43, #064b2e);
+    background: linear-gradient(180deg, #0b6b43, #064b2e);
+    background-attachment: fixed;
+    color: #1d2b24;
+    min-height: 100vh;
+    -webkit-text-size-adjust: 100%;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 16px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .hero { text-align: center; color: #fff; padding: 12px 0 18px; }
+  .school { font-size: 12px; letter-spacing: 1.5px; font-weight: 700; opacity: .9; }
+  h1 { margin: 6px 0 4px; font-size: 40px; letter-spacing: 2px; color: #ffd84d; text-shadow: 0 3px 0 rgba(0,0,0,.25); }
+  .sub { margin: 0; font-size: 15px; opacity: .95; }
+
+  .card { background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  label, .lbl { display: block; font-size: 13px; font-weight: 800; letter-spacing: .8px; color: #0b6b43; margin: 12px 0 6px; }
+  input[type=text] {
+    width: 100%; font-size: 18px; /* 16px+ evita el zoom en iOS */
+    padding: 14px; border: 2px solid #cfe3d8; border-radius: 12px; background: #f7fbf9;
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #1d2b24;
+    -webkit-appearance: none; appearance: none; outline: none;
+  }
+  input[type=text]:focus { border-color: #0b6b43; background: #fff; }
+
+  .grades { display: -webkit-box; display: -webkit-flex; display: flex; margin: 0 -4px; }
+  .grades button {
+    -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; margin: 0 4px; padding: 14px 0; font-size: 18px; font-weight: 800;
+    border: 2px solid #cfe3d8; background: #f7fbf9; color: #0b6b43; border-radius: 12px; cursor: pointer;
+    -webkit-appearance: none; appearance: none; touch-action: manipulation;
+  }
+  .grades button.sel { background: #0b6b43; color: #fff; border-color: #0b6b43; }
+
+  .err { min-height: 22px; margin-top: 10px; color: #c0392b; font-weight: 700; font-size: 14px; }
+
+  .btn {
+    display: block; width: 100%; padding: 16px; font-size: 18px; font-weight: 800; border: 0; border-radius: 14px;
+    cursor: pointer; text-align: center; text-decoration: none; margin-top: 10px;
+    -webkit-appearance: none; appearance: none; touch-action: manipulation;
+  }
+  .btn.primary { background: #ffd84d; color: #3b2f00; box-shadow: 0 4px 0 #c9a21b; }
+  .btn.green { background: #0b6b43; color: #fff; box-shadow: 0 4px 0 #064b2e; }
+  .btn.wa { background: #25d366; color: #063d1c; box-shadow: 0 4px 0 #1aa04c; }
+  .btn.light { background: #e8f2ed; color: #0b6b43; }
+  .btn:active { -webkit-transform: translateY(2px); transform: translateY(2px); }
+  .btn[disabled] { opacity: .5; }
+
+  .rules { color: #fff; font-size: 14px; line-height: 1.5; padding-left: 20px; margin: 18px 4px 0; }
+
+  /* Juego */
+  .top { color: #fff; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between; font-weight: 800; font-size: 15px; margin-bottom: 8px; }
+  .bar { height: 10px; background: rgba(255,255,255,.25); border-radius: 8px; overflow: hidden; margin-bottom: 6px; }
+  .bar > div { height: 100%; background: #ffd84d; width: 0; }
+  #tfill { background: #4be08b; width: 100%; transition: width .1s linear; }
+  #tfill.low { background: #ff6b5e; }
+  .tline { color: #fff; font-size: 13px; text-align: right; margin-bottom: 10px; min-height: 18px; }
+
+  .qcard { background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .level { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .6px; color: #fff; background: #0b6b43; padding: 4px 10px; border-radius: 20px; }
+  .level.s { background: #d35400; }
+  .qtext { font-size: 15px; color: #55675d; margin: 12px 0 6px; }
+  .qword { font-size: 30px; font-weight: 800; color: #0b6b43; margin: 0 0 14px; word-wrap: break-word; overflow-wrap: break-word; line-height: 1.2; }
+  .qword.es { font-size: 24px; color: #8a2b1d; }
+  .qsent { font-size: 22px; font-weight: 700; line-height: 1.4; margin: 0 0 14px; }
+  .blank { display: inline-block; min-width: 70px; border-bottom: 3px solid #d35400; color: #d35400; text-align: center; }
+  .fill { color: #0b6b43; border-bottom: 3px solid #0b6b43; }
+
+  .opt {
+    display: block; width: 100%; text-align: left; font-size: 17px; font-weight: 600; line-height: 1.3;
+    padding: 14px; margin-bottom: 10px; background: #f7fbf9; color: #1d2b24; border: 2px solid #cfe3d8; border-radius: 14px;
+    cursor: pointer; -webkit-appearance: none; appearance: none; touch-action: manipulation;
+  }
+  .opt.ok { background: #d9f7e5; border-color: #1fa85a; color: #0a5a2c; }
+  .opt.bad { background: #fde1de; border-color: #d9473a; color: #8c1f15; }
+  .opt.dim { opacity: .55; }
+
+  .fb { margin-top: 4px; padding: 12px 14px; border-radius: 12px; font-size: 15px; line-height: 1.45; display: none; }
+  .fb.show { display: block; }
+  .fb.good { background: #d9f7e5; color: #0a5a2c; }
+  .fb.wrong { background: #fde1de; color: #8c1f15; }
+
+  /* Resultados */
+  .res { text-align: center; }
+  .stars { font-size: 34px; color: #ffb400; letter-spacing: 4px; }
+  .big { font-size: 64px; font-weight: 900; color: #0b6b43; margin: 4px 0; line-height: 1; }
+  .big small { font-size: 28px; color: #6b7d73; }
+  .who { background: #f1f7f4; border-radius: 14px; padding: 12px; margin: 14px 0; font-weight: 800; font-size: 17px; word-wrap: break-word; }
+  .who span { display: block; color: #55675d; font-weight: 700; font-size: 14px; margin-top: 4px; }
+  .msg { font-size: 18px; font-weight: 800; margin: 6px 0; }
+  details { text-align: left; margin-top: 12px; background: #f7fbf9; border: 1px solid #cfe3d8; border-radius: 12px; padding: 10px 12px; }
+  summary { font-weight: 800; color: #0b6b43; cursor: pointer; }
+  details ul { margin: 8px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.5; }
+  .note { font-size: 13px; color: #55675d; margin-top: 10px; min-height: 18px; }
+</style>
+</head>
+<body>
+<noscript><div class="wrap"><div class="card">Necesitas activar JavaScript para jugar.</div></div></noscript>
+<div class="wrap">
+
+  <!-- ============ INICIO ============ -->
+  <section id="s-start" class="screen active">
+    <div class="hero">
+      <div class="school">I.E. SIMÓN ARAÚJO · TERM 4</div>
+      <h1>WORD QUEST</h1>
+      <p class="sub">Relationships &amp; Sexuality · Vocabulary Game</p>
+    </div>
+
+    <div class="card">
+      <label for="n1">PRIMER NOMBRE</label>
+      <input id="n1" type="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="30" placeholder="ESCRIBE EN MAYÚSCULAS">
+
+      <label for="n2">SEGUNDO NOMBRE</label>
+      <input id="n2" type="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="30" placeholder="ESCRIBE EN MAYÚSCULAS">
+
+      <div class="lbl">GRADO ONCE (11°)</div>
+      <div class="grades" id="grades"></div>
+
+      <div class="err" id="err" role="alert"></div>
+      <button class="btn primary" id="go" type="button">¡JUGAR! 🎮</button>
+    </div>
+
+    <ul class="rules">
+      <li>50 preguntas: 45 de significado + 5 oraciones nivel A1.</li>
+      <li>Cada respuesta correcta vale 1 punto (máximo 50).</li>
+      <li>Tienes 20 segundos por pregunta (25 en las oraciones).</li>
+      <li>Al final podrás reportar tus puntos a la profesora.</li>
+    </ul>
+  </section>
+
+  <!-- ============ JUEGO ============ -->
+  <section id="s-game" class="screen">
+    <div class="top">
+      <div id="qnum">1 / 50</div>
+      <div id="streak">🔥 0</div>
+      <div id="pts">⭐ 0</div>
+    </div>
+    <div class="bar"><div id="pfill"></div></div>
+    <div class="bar"><div id="tfill"></div></div>
+    <div class="tline" id="ttxt"></div>
+
+    <div class="qcard">
+      <span class="level" id="level">NIVEL 1</span>
+      <div id="qbody"></div>
+      <div id="opts"></div>
+      <div class="fb" id="fb"></div>
+      <button class="btn green" id="next" type="button" style="display:none">Siguiente →</button>
+    </div>
+  </section>
+
+  <!-- ============ RESULTADOS ============ -->
+  <section id="s-end" class="screen">
+    <div class="hero">
+      <div class="school">I.E. SIMÓN ARAÚJO · TERM 4</div>
+      <h1>¡TERMINASTE!</h1>
+    </div>
+    <div class="card res">
+      <div class="stars" id="stars"></div>
+      <div class="big"><span id="rscore">0</span><small> / 50</small></div>
+      <div class="msg" id="rmsg"></div>
+      <div class="who"><div id="rname"></div><span id="rgrade"></span><span id="rdate"></span></div>
+
+      <a class="btn wa" id="bwa" href="#" target="_blank" rel="noopener">📲 Enviar por WhatsApp</a>
+      <a class="btn green" id="bmail" href="#">✉️ Enviar por correo</a>
+      <button class="btn light" id="bcopy" type="button">📋 Copiar reporte</button>
+      <div class="note" id="rnote"></div>
+
+      <details id="missed">
+        <summary>Palabras para repasar</summary>
+        <ul id="mlist"></ul>
+      </details>
+
+      <button class="btn primary" id="again" type="button">🔄 Nuevo juego</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =========================================================
+   CONFIGURACIÓN (la profesora puede editar estas líneas)
+   ========================================================= */
+var CONFIG = {
+  TEACHER_WHATSAPP: "",   // Ej.: "573001234567" (código de país + número, sin + ni espacios). Vacío = el estudiante elige el contacto.
+  TEACHER_EMAIL: "",      // Ej.: "profesora@correo.com"
+  WEBHOOK_URL: "",        // Opcional: URL de Google Apps Script para guardar resultados en una hoja de cálculo
+  SECONDS_MEANING: 20,
+  SECONDS_SENTENCE: 25,
+  N_MEANING: 45,
+  N_SENTENCES: 5
+};
+
+/* =========================================================
+   BANCO DE PALABRAS  [inglés, español, grupo-opcional]
+   El grupo evita que dos sinónimos aparezcan como opciones juntas.
+   ========================================================= */
+var BANK = [
+  /* Step 2 · Diagnostic */
+  ["sex","sexo (características biológicas)"],
+  ["sexuality","sexualidad"],
+  ["female","femenino / mujer (sexo)"],
+  ["male","masculino / hombre (sexo)"],
+  ["body","cuerpo"],
+  ["organs","órganos"],
+  ["girl","niña"],
+  ["boy","niño"],
+  ["born","nacido"],
+  ["biological","biológico"],
+  ["hormones","hormonas"],
+  ["chromosomes","cromosomas"],
+  ["anatomy","anatomía"],
+  ["assigned at birth","asignado al nacer"],
+  ["puberty","pubertad"],
+  ["reproduction","reproducción"],
+  ["love","amor"],
+  ["like","gustar / agradar"],
+  ["feelings","sentimientos"],
+  ["identity","identidad"],
+  ["orientation","orientación"],
+  ["attraction","atracción"],
+  ["expression","expresión"],
+  ["preference","preferencia"],
+  ["choice","elección / opción"],
+  ["relationship","relación"],
+  ["self-esteem","autoestima"],
+  ["gender","género"],
+  ["respect","respeto"],
+  ["safe","seguro (sin peligro)"],
+  ["consent","consentimiento"],
+  ["privacy","privacidad"],
+  ["boundaries","límites"],
+  ["stereotype","estereotipo"],
+  ["diversity","diversidad"],
+  ["communication","comunicación"],
+  /* Types of relationships */
+  ["couple","pareja (dos personas con relación romántica)","g3"],
+  ["wife","esposa"],
+  ["husband","esposo"],
+  ["partner","pareja / compañero(a) sentimental","g3"],
+  ["ex","expareja"],
+  ["colleague","colega de trabajo"],
+  ["flatmate","compañero(a) de apartamento"],
+  ["date","cita (romántica)"],
+  ["blind date","cita a ciegas"],
+  ["acquaintance","conocido(a) (no es amigo cercano)"],
+  ["close friend","amigo(a) cercano(a)","g9"],
+  ["best friend","mejor amigo(a)","g9"],
+  ["keep in touch","mantenerse en contacto"],
+  ["fall out","pelearse / distanciarse (amistad)","g1"],
+  /* Healthy / unhealthy */
+  ["trust","confianza"],
+  ["jealousy","celos"],
+  ["control","control"],
+  ["honest communication","comunicación honesta"],
+  ["equality","igualdad"],
+  ["pressure","presión"],
+  ["support","apoyo"],
+  ["insults","insultos"],
+  ["personal space","espacio personal"],
+  /* Dictionary Hunt */
+  ["any chance?","¿hay alguna posibilidad?"],
+  ["ask out","invitar a salir"],
+  ["hit it off","llevarse muy bien desde el inicio","g6"],
+  ["have chemistry","tener química","g4"],
+  ["love at first sight","amor a primera vista","g4"],
+  ["fall for someone","enamorarse de alguien","g4"],
+  ["the right person","la persona indicada"],
+  ["brunette","morena (cabello castaño oscuro)"],
+  ["single","soltero(a)"],
+  ["get along (with)","llevarse bien (con)","g6"],
+  ["be together","estar juntos","g6"],
+  ["it works for us","a nosotros nos funciona"],
+  ["soulmates","almas gemelas"],
+  ["stronger than ever","más fuertes que nunca"],
+  ["settle down","sentar cabeza / establecerse","g7"],
+  ["pop the question","proponer matrimonio","g7"],
+  ["get engaged","comprometerse (pedida de mano)","g7"],
+  ["tie the knot","casarse","g7"],
+  ["wedding anniversary","aniversario de bodas"],
+  ["lifelong commitment","compromiso para toda la vida"],
+  ["deserve","merecer"],
+  ["faithful","fiel"],
+  ["congrats","felicitaciones"],
+  ["rush things","apresurar las cosas"],
+  ["argue","discutir","g1"],
+  ["fight","pelear / pelea","g1"],
+  ["behaviour","comportamiento"],
+  ["put up with","soportar / tolerar"],
+  ["cheat on","engañar a la pareja (infidelidad)"],
+  ["long-distance relationship","relación a distancia"],
+  ["it can be tough","puede ser difícil"],
+  ["work things out","resolver los problemas","g5"],
+  ["make up","reconciliarse / hacer las paces","g5"],
+  ["split up","separarse / terminar la relación","g2"],
+  ["dump","dejar / botar a la pareja","g2"],
+  ["it didn't last long","no duró mucho"],
+  ["there are plenty of fish in the sea","hay muchas más personas por conocer"],
+  ["we were able to","pudimos / fuimos capaces de"]
+];
+
+/* =========================================================
+   ORACIONES A1  (el hueco ____ se completa con una palabra)
+   ========================================================= */
+var SENTS = [
+  {s:"Ana and Leo are a ____. They love each other.", a:"couple", d:["colleague","flatmate","brunette"], t:"Ana y Leo son una pareja. Se aman."},
+  {s:"Maria is my ____. She is like my family.", a:"best friend", d:["acquaintance","colleague","ex"], t:"María es mi mejor amiga. Es como mi familia."},
+  {s:"I don't have a boyfriend or a girlfriend. I am ____.", a:"single", d:["faithful","brunette","engaged"], t:"No tengo novio ni novia. Estoy soltero(a)."},
+  {s:"Tom and Eva got married ten years ago. Today is their ____.", a:"wedding anniversary", d:["puberty","privacy","behaviour"], t:"Tom y Eva se casaron hace diez años. Hoy es su aniversario de bodas."},
+  {s:"My sister and I ____ about the TV. We are angry.", a:"argue", d:["deserve","settle down","keep in touch"], t:"Mi hermana y yo discutimos por el televisor. Estamos enojadas."},
+  {s:"I live in an apartment with Carlos. He is my ____. We share the kitchen.", a:"flatmate", d:["husband","colleague","date"], t:"Vivo en un apartamento con Carlos. Es mi compañero de apartamento. Compartimos la cocina."},
+  {s:"I am a married man. She is my ____.", a:"wife", d:["ex","colleague","flatmate"], t:"Soy un hombre casado. Ella es mi esposa."},
+  {s:"Ben loves only Sara. He is ____ to her.", a:"faithful", d:["single","brunette","blind date"], t:"Ben solo ama a Sara. Le es fiel."},
+  {s:"My boyfriend lives in Spain and I live in Peru. We have a ____.", a:"long-distance relationship", d:["blind date","best friend","lifelong commitment"], t:"Mi novio vive en España y yo vivo en Perú. Tenemos una relación a distancia."},
+  {s:"It is Friday night. I have a ____ with Luis. We go to the cinema.", a:"date", d:["colleague","flatmate","couple"], t:"Es viernes en la noche. Tengo una cita con Luis. Vamos al cine."}
+];
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+var ENMAP = {};
+(function () { for (var i = 0; i < BANK.length; i++) { ENMAP[BANK[i][0]] = BANK[i][1]; } })();
+
+function $(id) { return document.getElementById(id); }
+
+function shuffle(arr) {
+  var a = arr.slice(), i, j, t;
+  for (i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function sanitizeName(v) {
+  return String(v).toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ ]/g, "").replace(/ {2,}/g, " ");
+}
+
+function validName(v) {
+  return /^[A-ZÁÉÍÓÚÜÑ]{2,}( [A-ZÁÉÍÓÚÜÑ]+)*$/.test(v.replace(/^ +| +$/g, ""));
+}
+
+function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+function nowText() {
+  var d = new Date();
+  return pad2(d.getDate()) + "/" + pad2(d.getMonth() + 1) + "/" + d.getFullYear() + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+}
+
+/* =========================================================
+   GENERACIÓN DE PREGUNTAS
+   ========================================================= */
+function makeMeaning(w) {
+  var mode = Math.random() < 0.5 ? "en2es" : "es2en";
+  var idx = (mode === "en2es") ? 1 : 0;
+  var correct = w[idx];
+  var pool = [];
+  for (var i = 0; i < BANK.length; i++) {
+    var o = BANK[i];
+    if (o[0] === w[0]) continue;
+    if (w[2] && o[2] && o[2] === w[2]) continue;
+    if (o[idx] === correct) continue;
+    pool.push(o[idx]);
+  }
+  var opts = shuffle(pool).slice(0, 3);
+  opts.push(correct);
+  return {
+    type: "m", mode: mode, en: w[0], es: w[1],
+    correct: correct, opts: shuffle(opts)
+  };
+}
+
+function makeSentence(s) {
+  var opts = s.d.slice(); opts.push(s.a);
+  return { type: "s", s: s.s, en: s.a, es: s.t, correct: s.a, opts: shuffle(opts) };
+}
+
+function buildQuiz() {
+  var words = shuffle(BANK).slice(0, CONFIG.N_MEANING);
+  var qs = [], i;
+  for (i = 0; i < words.length; i++) qs.push(makeMeaning(words[i]));
+  var ss = shuffle(SENTS).slice(0, CONFIG.N_SENTENCES);
+  for (i = 0; i < ss.length; i++) qs.push(makeSentence(ss[i]));
+  return qs;
+}
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+var STATE = { n1: "", n2: "", grade: "", qs: [], i: 0, score: 0, streak: 0, missed: [], locked: false };
+var timerId = null, deadline = 0, totalMs = 0;
+
+function show(id) {
+  var els = document.querySelectorAll(".screen"), k;
+  for (k = 0; k < els.length; k++) els[k].classList.remove("active");
+  $(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+/* =========================================================
+   PANTALLA DE INICIO
+   ========================================================= */
+function bindName(el) {
+  el.addEventListener("input", function () {
+    var clean = sanitizeName(el.value);
+    if (clean !== el.value) {
+      var pos = el.selectionStart;
+      el.value = clean;
+      try { el.setSelectionRange(pos, pos); } catch (e) {}
+    }
+  });
+}
+bindName($("n1"));
+bindName($("n2"));
+
+(function buildGrades() {
+  var box = $("grades"), L = ["A", "B", "C", "D"], k;
+  for (k = 0; k < L.length; k++) {
+    (function (letter) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = "11°" + letter;
+      b.setAttribute("data-g", letter);
+      b.addEventListener("click", function () {
+        STATE.grade = letter;
+        var all = box.getElementsByTagName("button"), m;
+        for (m = 0; m < all.length; m++) all[m].classList.remove("sel");
+        b.classList.add("sel");
+        $("err").textContent = "";
+      });
+      box.appendChild(b);
+    })(L[k]);
+  }
+})();
+
+$("go").addEventListener("click", function () {
+  var a = sanitizeName($("n1").value).replace(/^ +| +$/g, "");
+  var b = sanitizeName($("n2").value).replace(/^ +| +$/g, "");
+  $("n1").value = a; $("n2").value = b;
+  if (!validName(a) || !validName(b)) {
+    $("err").textContent = "Escribe tus 2 nombres en MAYÚSCULAS (solo letras, mínimo 2).";
+    return;
+  }
+  if (!STATE.grade) {
+    $("err").textContent = "Selecciona tu grado: 11°A, 11°B, 11°C o 11°D.";
+    return;
+  }
+  $("err").textContent = "";
+  STATE.n1 = a; STATE.n2 = b;
+  startGame();
+});
+
+/* =========================================================
+   JUEGO
+   ========================================================= */
+function startGame() {
+  STATE.qs = buildQuiz();
+  STATE.i = 0; STATE.score = 0; STATE.streak = 0; STATE.missed = [];
+  show("s-game");
+  renderQuestion();
+}
+
+function setHud() {
+  var total = STATE.qs.length;
+  $("qnum").textContent = (STATE.i + 1) + " / " + total;
+  $("pts").textContent = "⭐ " + STATE.score;
+  $("streak").textContent = "🔥 " + STATE.streak;
+  $("pfill").style.width = (STATE.i / total * 100) + "%";
+}
+
+function renderQuestion() {
+  var q = STATE.qs[STATE.i], html = "", k;
+  STATE.locked = false;
+  setHud();
+
+  var lv = $("level");
+  if (q.type === "m") { lv.textContent = "🎮 NIVEL 1 · SIGNIFICADO"; lv.className = "level"; }
+  else { lv.textContent = "✏️ NIVEL 2 · ORACIÓN A1"; lv.className = "level s"; }
+
+  if (q.type === "m") {
+    if (q.mode === "en2es") {
+      html = '<div class="qtext">¿Qué significa en español?</div><div class="qword"></div>';
+    } else {
+      html = '<div class="qtext">¿Cuál es la palabra en inglés?</div><div class="qword es"></div>';
+    }
+    $("qbody").innerHTML = html;
+    $("qbody").lastChild.textContent = (q.mode === "en2es") ? q.en : q.es;
+  } else {
+    $("qbody").innerHTML = '<div class="qtext">Complete the sentence:</div><div class="qsent"></div>';
+    var parts = q.s.split("____");
+    var holder = $("qbody").lastChild;
+    holder.appendChild(document.createTextNode(parts[0]));
+    var sp = document.createElement("span"); sp.className = "blank"; sp.id = "blank"; sp.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    holder.appendChild(sp);
+    holder.appendChild(document.createTextNode(parts[1] || ""));
+  }
+
+  var box = $("opts"); box.innerHTML = "";
+  for (k = 0; k < q.opts.length; k++) {
+    (function (idx) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "opt"; b.textContent = q.opts[idx];
+      b.addEventListener("click", function () { answer(idx); });
+      box.appendChild(b);
+    })(k);
+  }
+
+  var fb = $("fb"); fb.className = "fb"; fb.textContent = "";
+  $("next").style.display = "none";
+  startTimer(q.type === "m" ? CONFIG.SECONDS_MEANING : CONFIG.SECONDS_SENTENCE);
+}
+
+function startTimer(sec) {
+  totalMs = sec * 1000;
+  deadline = Date.now() + totalMs;
+  if (timerId) clearInterval(timerId);
+  timerId = setInterval(tick, 100);
+  tick();
+}
+
+function tick() {
+  var left = deadline - Date.now();
+  if (left <= 0) {
+    clearInterval(timerId); timerId = null;
+    $("tfill").style.width = "0%";
+    $("ttxt").textContent = "⏰ 0 s";
+    answer(-1);
+    return;
+  }
+  $("tfill").style.width = (left / totalMs * 100) + "%";
+  $("tfill").className = left < 5000 ? "low" : "";
+  $("ttxt").textContent = "⏱ " + Math.ceil(left / 1000) + " s";
+}
+
+function answer(idx) {
+  if (STATE.locked) return;
+  STATE.locked = true;
+  if (timerId) { clearInterval(timerId); timerId = null; }
+
+  var q = STATE.qs[STATE.i];
+  var btns = $("opts").getElementsByTagName("button"), k;
+  var ok = (idx >= 0 && q.opts[idx] === q.correct);
+
+  for (k = 0; k < btns.length; k++) {
+    btns[k].disabled = true;
+    if (q.opts[k] === q.correct) btns[k].classList.add("ok");
+    else if (k === idx) btns[k].classList.add("bad");
+    else btns[k].classList.add("dim");
+  }
+
+  var msg;
+  if (ok) {
+    STATE.score++; STATE.streak++;
+    msg = "✅ ¡Correcto! ";
+  } else {
+    STATE.streak = 0;
+    msg = (idx < 0 ? "⏰ ¡Se acabó el tiempo! " : "❌ Casi. ");
+    STATE.missed.push({ en: q.en, es: ENMAP[q.en] || q.es });
+    try { if (navigator.vibrate) navigator.vibrate(120); } catch (e) {}
+  }
+
+  if (q.type === "m") {
+    msg += q.en + " = " + q.es;
+  } else {
+    var blank = $("blank");
+    if (blank) { blank.textContent = q.correct; blank.className = "blank fill"; }
+    msg += q.es;
+  }
+
+  var fb = $("fb");
+  fb.textContent = msg;
+  fb.className = "fb show " + (ok ? "good" : "wrong");
+
+  $("pts").textContent = "⭐ " + STATE.score;
+  $("streak").textContent = "🔥 " + STATE.streak;
+
+  var nx = $("next");
+  nx.textContent = (STATE.i >= STATE.qs.length - 1) ? "Ver mi resultado 🏆" : "Siguiente →";
+  nx.style.display = "block";
+}
+
+$("next").addEventListener("click", function () {
+  STATE.i++;
+  if (STATE.i >= STATE.qs.length) { finish(); }
+  else { renderQuestion(); window.scrollTo(0, 0); }
+});
+
+/* =========================================================
+   RESULTADOS Y REPORTE
+   ========================================================= */
+var REPORT_TEXT = "";
+
+function buildReport() {
+  var name = STATE.n1 + " " + STATE.n2;
+  var lines = [
+    "REPORTE · WORD QUEST",
+    "I.E. Simón Araújo · Term 4 · Teacher Katia Contreras",
+    "Estudiante: " + name,
+    "Grado: 11°" + STATE.grade,
+    "Puntos: " + STATE.score + " / " + STATE.qs.length,
+    "Fecha: " + nowText()
+  ];
+  if (STATE.missed.length) {
+    var w = [], k;
+    for (k = 0; k < STATE.missed.length && k < 20; k++) w.push(STATE.missed[k].en);
+    lines.push("Para repasar: " + w.join(", ") + (STATE.missed.length > 20 ? "…" : ""));
+  }
+  return lines.join("\n");
+}
+
+function finish() {
+  show("s-end");
+  var total = STATE.qs.length, s = STATE.score;
+  $("pfill").style.width = "100%";
+
+  $("rscore").textContent = s;
+  var st = Math.round(s / total * 5), stars = "", k;
+  for (k = 0; k < 5; k++) stars += (k < st ? "★" : "☆");
+  $("stars").textContent = stars;
+
+  var msg = s >= 45 ? "🏆 ¡Excelente! Dominas el vocabulario."
+          : s >= 35 ? "🎉 ¡Muy bien! Casi lo tienes."
+          : s >= 25 ? "👍 Bien, sigue practicando."
+          :           "📚 Necesitas repasar. ¡Tú puedes!";
+  $("rmsg").textContent = msg;
+
+  $("rname").textContent = STATE.n1 + " " + STATE.n2;
+  $("rgrade").textContent = "Grado 11°" + STATE.grade;
+  $("rdate").textContent = nowText();
+
+  REPORT_TEXT = buildReport();
+
+  var wa = "https://wa.me/" + (CONFIG.TEACHER_WHATSAPP ? CONFIG.TEACHER_WHATSAPP.replace(/[^0-9]/g, "") : "") + "?text=" + encodeURIComponent(REPORT_TEXT);
+  $("bwa").href = wa;
+  $("bmail").href = "mailto:" + CONFIG.TEACHER_EMAIL + "?subject=" + encodeURIComponent("Word Quest - 11°" + STATE.grade + " - " + STATE.n1 + " " + STATE.n2) + "&body=" + encodeURIComponent(REPORT_TEXT);
+
+  var list = $("mlist"); list.innerHTML = "";
+  if (STATE.missed.length === 0) {
+    $("missed").style.display = "none";
+  } else {
+    $("missed").style.display = "block";
+    for (k = 0; k < STATE.missed.length; k++) {
+      var li = document.createElement("li");
+      li.textContent = STATE.missed[k].en + " = " + STATE.missed[k].es;
+      list.appendChild(li);
+    }
+  }
+
+  $("rnote").textContent = "";
+  sendWebhook();
+}
+
+function sendWebhook() {
+  if (!CONFIG.WEBHOOK_URL || typeof fetch !== "function") return;
+  var payload = {
+    nombre1: STATE.n1, nombre2: STATE.n2, grado: "11" + STATE.grade,
+    puntos: STATE.score, total: STATE.qs.length, fecha: nowText(),
+    repasar: STATE.missed.map(function (m) { return m.en; }).join(", ")
+  };
+  fetch(CONFIG.WEBHOOK_URL, {
+    method: "POST", mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  }).then(function () {
+    $("rnote").textContent = "✅ Tus puntos fueron enviados al registro de la profesora.";
+  }).catch(function () {
+    $("rnote").textContent = "⚠️ No se pudo enviar automáticamente. Usa WhatsApp o copia el reporte.";
+  });
+}
+
+$("bcopy").addEventListener("click", function () {
+  var done = function () { $("rnote").textContent = "📋 Reporte copiado. Pégalo en el chat de la profesora."; };
+  var fallback = function () {
+    var ta = document.createElement("textarea");
+    ta.value = REPORT_TEXT; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0"; ta.style.fontSize = "16px";
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { ta.setSelectionRange(0, ta.value.length); } catch (e) {}
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    if (ok) done(); else $("rnote").textContent = "No se pudo copiar. Toma una captura de pantalla.";
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(REPORT_TEXT).then(done, fallback);
+  } else { fallback(); }
+});
+
+$("again").addEventListener("click", function () {
+  $("n1").value = ""; $("n2").value = "";
+  STATE.grade = "";
+  var all = $("grades").getElementsByTagName("button"), k;
+  for (k = 0; k < all.length; k++) all[k].classList.remove("sel");
+  $("err").textContent = "";
+  show("s-start");
+});
+</script>
+</body>
+</html>
